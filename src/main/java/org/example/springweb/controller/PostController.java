@@ -1,5 +1,6 @@
 package org.example.springweb.controller;
 
+import org.apache.ibatis.annotations.Param;
 import org.example.springweb.domain.*;
 import org.example.springweb.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,20 @@ public class PostController {
   }
 
   @GetMapping("/posts")
-  public List<PostAllResponseDto> viewAllPosts() {
-    return postService.getAllPosts();
+  public List<PostAllResponseDto> viewAllPosts(@RequestParam(name = "likes", required = false) Integer likes,
+                                               @RequestParam(name = "title", required = false) String title) {
+    if (likes != null || title != null) {
+      return postService.getAllPostsWithLikes(likes, title);
+    } else {
+      return postService.getAllPosts();
+    }
   }
+
+//  @GetMapping("/posts")
+//  public List<PostAllResponseDto> viewAllPosts() {
+//    return postService.getAllPosts();
+//  }
+
 
   @GetMapping("/posts/{postId}")
   public PostDetailResponseDto viewPostDetail(@PathVariable("postId") int postId) {
@@ -46,7 +58,7 @@ public class PostController {
   @PatchMapping("/posts/{postId}")
   public PostDetailResponseDto updateBodyPost(@PathVariable("postId") int postId,
                                               @RequestBody PostUpdateRequestDto postDto) {
-    return postService.updatePost(postDto);
+    return postService.updatePost(postId, postDto);
   }
 
 }

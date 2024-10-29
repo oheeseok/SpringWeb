@@ -22,7 +22,7 @@ class PostServiceTest {
   void tearDown() {
     System.out.println("메소드 실행 후");
   }
-  
+
   @Test
   void getAllPosts() {
     System.out.println("모든 게시판 글 목록 조회");

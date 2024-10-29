@@ -28,6 +28,14 @@ public class PostService {
     return postDtos;
   }
 
+  public List<PostAllResponseDto> getAllPostsWithLikes(Integer likes, String title) {
+    List<Post> allPosts = postRepository.findAllWithLikes(likes, title);
+    List<PostAllResponseDto> postDtos = allPosts.stream()
+        .map(PostAllResponseDto::of)
+        .collect(Collectors.toList());
+    return postDtos;
+  }
+
   public PostDetailResponseDto getPostDetail(int postId) {
     Post post = postRepository.findById(postId);
     if (post == null) {
@@ -52,8 +60,8 @@ public class PostService {
 
     log.info("+++++ post: {}", post);
 
-    int postId = postRepository.insertPost(post);
-    return getPostDetail(postId);
+    postRepository.insertPost(post); // 성공시 1, 실패시 0
+    return getPostDetail(post.getPostId());
   }
 
   public void deletePost(int postId) {
@@ -67,17 +75,20 @@ public class PostService {
       likes = post.getLikes() + 1;
       post.setLikes(likes);
     }
+    postRepository.updatePost(post);
     return likes;
   }
 
-  public PostDetailResponseDto updatePost(PostUpdateRequestDto postDto) {
-    Post post = postRepository.findById(postDto.getPostId());
+  public PostDetailResponseDto updatePost(int postId, PostUpdateRequestDto postDto) {
+    Post post = postRepository.findById(postId);
     // body는 빈 내용을 허용하지 않는다.
 
     if(post != null && !postDto.getBody().equals("")) {
       post.setBody(postDto.getBody());
       postRepository.updatePost(post);
     }
-    return getPostDetail(postDto.getPostId());
+    return getPostDetail(postId);
   }
+
+
 }

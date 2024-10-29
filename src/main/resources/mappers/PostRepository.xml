@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.springweb.repository.PostRepository">
+<!--    <select id="findAll" resultType="org.example.springweb.domain.Post">-->
+<!--        SELECT * FROM post-->
+<!--    </select>-->
+    <select id="findAllWithLikes" parameterType="map" resultType="org.example.springweb.domain.Post">
+        SELECT * FROM post
+        <where>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="likes != null">
+                AND likes &gt; #{likes}
+            </if>
+        </where>
+
+    </select>
+    <select id="findById" parameterType="int" resultType="org.example.springweb.domain.Post">
+        SELECT * FROM post WHERE postId = #{postId}
+    </select>
+    <insert id="insertPost" parameterType="org.example.springweb.domain.Post"
+            useGeneratedKeys="true"
+            keyProperty="postId">
+        INSERT INTO post (title, body)
+        VALUES (#{title}, #{body})
+    </insert>
+    <delete id="deletePost" parameterType="int">
+        DELETE FROM post WHERE postId = #{postId}
+    </delete>
+    <update id="updatePost" parameterType="org.example.springweb.domain.Post">
+        UPDATE post
+        SET body = #{body}, likes = #{likes}
+        WHERE postId = #{postId}
+    </update>
+
+</mapper>

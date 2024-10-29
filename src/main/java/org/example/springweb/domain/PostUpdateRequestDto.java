@@ -7,6 +7,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUpdateRequestDto {
-  private int postId;
   private String body;
 }
