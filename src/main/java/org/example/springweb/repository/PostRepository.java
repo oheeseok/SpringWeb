@@ -7,7 +7,7 @@ import org.example.springweb.domain.Post;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
 public interface PostRepository {
   @Select("select * from post")
   List<Post> findAll();
